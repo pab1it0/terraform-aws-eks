@@ -198,10 +198,10 @@ variable "cluster_delete_timeout" {
   default     = "15m"
 }
 
-variable "local_exec_interpreter" {
-  description = "Command to run for local-exec resources. Must be a shell-style interpreter. If you are on Windows Git Bash is a good choice."
-  type        = list(string)
-  default     = ["/bin/sh", "-c"]
+variable "wait_for_cluster_cmd" {
+  description = "Custom local-exec command to execute for determining if the eks cluster is healthy. Cluster endpoint will be available as an environment variable called ENDPOINT"
+  type        = string
+  default     = "until curl -k -s $ENDPOINT/healthz >/dev/null; do sleep 4; done"
 }
 
 variable "worker_create_initial_lifecycle_hooks" {
@@ -262,18 +262,6 @@ variable "workers_role_name" {
   description = "User defined workers role name."
   type        = string
   default     = ""
-}
-
-variable "manage_worker_autoscaling_policy" {
-  description = "Whether to let the module manage the cluster autoscaling iam policy."
-  type        = bool
-  default     = true
-}
-
-variable "attach_worker_autoscaling_policy" {
-  description = "Whether to attach the module managed cluster autoscaling iam policy to the default worker IAM role. This requires `manage_worker_autoscaling_policy = true`"
-  type        = bool
-  default     = true
 }
 
 variable "attach_worker_cni_policy" {
